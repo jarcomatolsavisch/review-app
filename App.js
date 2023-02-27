@@ -1,20 +1,44 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React, {useState} from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { GestureHandlerRootView } from "react-native-gesture-handler";
+import * as Font from 'expo-font'
+import AppLoading from 'expo-app-loading';
+import MyDrawer from "./routes/MyDrawer";
 
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
-  );
+
+const getFonts = () => {
+  console.log("In getFonts")
+  // Return a Promise
+  return Font.loadAsync({
+    'nunito-italic': require('./assets/fonts/Nunito-Italic-VariableFont_wght.ttf'),
+    'nunito-variable': require('./assets/fonts/Nunito-VariableFont_wght.ttf')
+  })
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-});
+export default function App() {
+
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+
+  //const Navigator = createAppContainer(HomeStack)
+
+  if(fontsLoaded){
+
+     
+    return (
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <NavigationContainer>
+          <MyDrawer />
+        </NavigationContainer>
+      </GestureHandlerRootView>
+    );
+  } else {
+    return (
+    <AppLoading
+     startAsync={getFonts}
+     onFinish={()=> setFontsLoaded(true)} 
+     onError={() => console.log('error')}
+    />
+    )
+  }
+
+}
